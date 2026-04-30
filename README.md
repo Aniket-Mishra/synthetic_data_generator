@@ -1,8 +1,8 @@
 # Synthetic Data Generator
 
-A framework for generating synthetic datasets with realistic physics and configurable fault injection.
+A framework for generating synthetic datasets with realistic system behavior and configurable fault or anomaly injection.
 
-I built this to create labeled datasets for my ML research without relying on real operational data. Each generator simulates the actual physics of the system it models. Faults follow the degradation patterns you would see in the real world.
+I built this to create labeled datasets for my ML research without relying on real operational data. The physical generators simulate the actual physics of the system they model. Faults follow degradation patterns you would see in the real world. The tabular generators focus on realistic statistical patterns, seasonal behavior, repeated customer behavior, and known ground truth labels.
 
 ## What is in here
 
@@ -28,12 +28,24 @@ Generates operating point snapshots for a 4-pump station. Each sample solves the
 
 Injected faults: cavitation, impeller wear, bearing friction. Each fault shifts the relevant physical quantities in the direction you would expect from the real failure mode.
 
+**Imbalanced fraud detection** (`tabular/imbalanced_fraud_detection.ipynb`)
+
+Generates a transaction dataset for fraud detection. Customers have repeated transactions, account age is derived from signup date, and normal behavior includes point-of-sale payments, iDEAL payments, credit card online payments, cash withdrawals, and recurring subscriptions. I made it Dutch specific because I live in the Netherlands now.
+
+Injected anomalies: card testing pings, high-value extrication, and velocity attacks. Fraud is rare and configurable, with labels for both fraud source and fraud scenario.
+
+**Ecommerce sales** (`tabular/ecommerce_sales_2019.ipynb`)
+
+Generates monthly ecommerce sales data for 2019. Product demand varies by month, orders peak around noon and evening, and some products trigger realistic accessory purchases such as cables, headphones, keyboards, and cooling pads. This code is from [one of my old projects](https://github.com/Aniket-Mishra/Sales-Analysis-and-Reporting). It is an updated version of a tutorial by [Keith Galli](https://github.com/KeithGalli)
+
 ## Repository structure
 
 ```
 .
 ├── tabular/
-│   └── centrifugal_pump.ipynb
+│   ├── centrifugal_pump.ipynb
+│   ├── ecommerce_sales_2019.ipynb
+│   └── imbalanced_fraud_detection.ipynb
 ├── time_series/
 │   ├── solar_farm_with_downtime.ipynb
 │   └── wind_farm_with_downtime.ipynb
@@ -59,13 +71,15 @@ jupyter notebook time_series/solar_farm_with_downtime.ipynb
 
 ## What you can configure
 
-Each generator exposes a device config list. You control:
+Each generator exposes a configuration section. Depending on the dataset, you control:
 
-- Number of devices
+- Number of devices, customers, transactions, or orders
 - Simulation duration and sampling frequency
-- Per-device physical parameters (capacity, efficiency, thermal bias, sensor noise, etc.)
+- Per-device physical parameters such as capacity, efficiency, thermal bias, and sensor noise
 - Fault type, timing, ramp period, shape, and severity
 - Maintenance outage windows
+- Fraud rate, fraud scenario mix, transaction channels, country mix, and subscription behavior
+- Monthly sales volume, product weights, prices, and accessory bundle probabilities
 
 Example from the solar farm notebook:
 
@@ -95,17 +109,19 @@ device_configs = [
 - Prototyping data pipelines before real data is available
 - Benchmarking forecasting and condition monitoring algorithms
 - Generating labeled datasets with known ground truth
+- Testing fraud detection, imbalanced classification, and transaction monitoring systems
+- Creating realistic tabular data for analytics and dashboard development
 
 ## Roadmap
 
-- More data modalities (graph, text, multimodal)
+- More data modalities such as graph, text, and multimodal data
 - Config-driven generation API
 - CLI interface
 - Streaming data simulation
 
 ## Notes
 
-This project focuses on controllable, physics-grounded data generation. It is not trying to be a domain-specific digital twin. The goal is to produce datasets that are structurally and statistically realistic enough to be useful for ML experimentation.
+This project focuses on controllable, realistic synthetic data generation. It is not trying to be a set of domain-specific digital twins. The goal is to produce datasets that are structurally and statistically realistic enough to be useful for ML experimentation.
 
 ## License
 
