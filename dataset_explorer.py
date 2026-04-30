@@ -7,6 +7,11 @@ import pyarrow.parquet as pq
 import pyarrow as pa
 from pathlib import Path
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+
 BASE = Path("/Users/aniket/github/synthetic_data_generator/generated_data")
 
 CHART_FONT = dict(size=15)
@@ -50,7 +55,7 @@ def load(path, time_col=None, start=None, end=None):
 
 def chart(fig, height=500):
     fig.update_layout(height=height, font=CHART_FONT, legend=dict(font=CHART_FONT))
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 
 def table_height(n_rows, max_height=600):
@@ -69,6 +74,11 @@ def datetime_cols(df):
     return df.select_dtypes("datetime").columns.tolist()
 
 
+def arrow_safe(df):
+    problem_cols = df.select_dtypes("object").columns
+    return df.astype({col: str for col in problem_cols})
+
+
 def view_overview(df):
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("Rows", f"{len(df):,}")
@@ -77,13 +87,13 @@ def view_overview(df):
     c4.metric("Null rate", f"{df.isnull().mean().mean() * 100:.1f}%")
 
     st.dataframe(
-        pd.DataFrame({
+        arrow_safe(pd.DataFrame({
             "dtype": df.dtypes.astype(str),
             "nulls": df.isnull().sum(),
             "null %": (df.isnull().mean() * 100).round(1),
             "unique": df.nunique(),
-        }),
-        use_container_width=True,
+        })),
+        width='stretch',
         height=table_height(len(df.columns)),
     )
 
@@ -91,7 +101,7 @@ def view_overview(df):
 def view_sample(df):
     n = st.slider("Rows", 5, 100, 10)
     sample = df.head(n)
-    st.dataframe(sample, use_container_width=True, height=table_height(len(sample)))
+    st.dataframe(sample, width='stretch', height=table_height(len(sample)))
 
 
 def view_distributions(df):
@@ -120,7 +130,7 @@ def view_nulls(df):
         return
 
     chart(px.bar(summary.reset_index(), x="index", y="null_pct", template="simple_white"))
-    st.dataframe(summary, use_container_width=True, height=table_height(len(summary)))
+    st.dataframe(summary, width='stretch', height=table_height(len(summary)))
 
 
 def view_correlations(df):
@@ -181,7 +191,7 @@ def view_time_series(df):
     if y2_col != "None":
         fig.update_yaxes(title_text=y2_col, secondary_y=True)
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
 
 
 def view_scatter(df):
@@ -198,7 +208,7 @@ def view_scatter(df):
 
 
 def view_stats(df):
-    st.dataframe(df.describe(include="all").T, use_container_width=True, height=table_height(len(df.columns)))
+    st.dataframe(df.describe(include="all").T, width='stretch', height=table_height(len(df.columns)))
 
 
 VIEWS = {
@@ -271,3 +281,4 @@ def main():
 
 
 main()
+# streamlit run dataset_explorer.py --logger.level=debug
