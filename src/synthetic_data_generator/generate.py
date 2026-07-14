@@ -10,8 +10,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True)
     cfg = yaml.safe_load(Path(parser.parse_args().config).read_text())
-    df, events = simulate_farm(cfg["site"], cfg["devices"], seed=cfg["seed"])
     print(f"""Simulating Dataset: {cfg["output_dir"].split("/")[-1]}""")
+    df, events = simulate_farm(cfg["site"], cfg["devices"], seed=cfg["seed"])
     write_dataset(
         df, events, cfg["output_dir"], cfg["stream_name"], cfg["events_name"]
     )

@@ -1,7 +1,7 @@
 [project]
 name = "synthetic-data-generator"
 version = "0.1.0"
-description = "Physics informed synthetic data generatior with configurable fault/downtime injection"
+description = "Physics informed synthetic data generator with configurable fault/downtime injection"
 authors = [
     { name = "Aniket-Mishra", email = "anmishraofficial@gmail.com" }
 ]
@@ -14,7 +14,6 @@ dependencies = [
 ]
 
 [project.scripts]
-synthetic-data-generator = "synthetic_data_generator:main"
 generate = "synthetic_data_generator.generate:main"
 
 [build-system]
@@ -25,5 +24,6 @@ build-backend = "uv_build"
 dev = [
     "ipykernel>=7.3.0",
     "jupyter>=1.1.1",
+    "mlcroissant>=1.1.0",
     "pytest>=9.1.1",
 ]
