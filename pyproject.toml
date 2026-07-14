@@ -1,0 +1,29 @@
+[project]
+name = "synthetic-data-generator"
+version = "0.1.0"
+description = "Physics informed synthetic data generator with configurable fault/downtime injection"
+authors = [
+    { name = "Aniket-Mishra", email = "anmishraofficial@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=2.5.1",
+    "pandas>=3.0.3",
+    "pyarrow>=25.0.0",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+generate = "synthetic_data_generator.generate:main"
+
+[build-system]
+requires = ["uv_build>=0.11.16,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.3.0",
+    "jupyter>=1.1.1",
+    "mlcroissant>=1.1.0",
+    "pytest>=9.1.1",
+]
