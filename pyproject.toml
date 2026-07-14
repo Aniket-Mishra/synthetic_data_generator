@@ -10,10 +10,12 @@ dependencies = [
     "numpy>=2.5.1",
     "pandas>=3.0.3",
     "pyarrow>=25.0.0",
+    "pyyaml>=6.0",
 ]
 
 [project.scripts]
 synthetic-data-generator = "synthetic_data_generator:main"
+generate = "synthetic_data_generator.generate:main"
 
 [build-system]
 requires = ["uv_build>=0.11.16,<0.12.0"]

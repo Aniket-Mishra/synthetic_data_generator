@@ -1,0 +1,52 @@
+seed: 42
+output_dir: generated_data/time_series/wind_data_with_repair
+stream_name: wind_turbine_stream_data_with_repair
+events_name: wind_turbine_fault_events_with_repair
+
+site:
+  start: "2025-01-01"
+  n_days: 365
+  freq: "10min"
+
+
+devices:
+  - device_id: WT001
+    device_params: {power_efficiency: 1.00}
+    faults: []
+  - device_id: WT002
+    device_params: {power_efficiency: 0.99}
+    faults:
+      - {type: temperature, start_day: 100, ramp_days: 14, shape: linear, max_severity: 1.0}
+  - device_id: WT003
+    device_params: {power_efficiency: 1.01}
+    faults:
+      - {type: pitch_misalignment, start_day: 180, ramp_steps: 6, shape: abrupt, max_severity: 10.0}
+  - device_id: WT004
+    device_params: {power_efficiency: 0.98}
+    faults:
+      - {type: yaw_misalignment, start_day: 270, ramp_days: 10, shape: linear, max_severity: 18.0}
+  - device_id: WT005
+    device_params: {power_efficiency: 1.00}
+    faults:
+      - {type: temperature, start_day: 50, ramp_days: 14, end_day: 220, ramp_down_days: 14, shape: linear, max_severity: 1.0}
+  - device_id: WT006
+    device_params: {power_efficiency: 0.99}
+    faults:
+      - {type: pitch_misalignment, start_day: 120, end_day: 210, shape: abrupt, max_severity: 10.0}
+  - device_id: WT007
+    device_params: {power_efficiency: 1.01}
+    faults:
+      - {type: yaw_misalignment, start_day: 80, ramp_days: 10, end_day: 260, ramp_down_days: 10, shape: linear, max_severity: 18.0}
+  - device_id: WT008
+    device_params: {power_efficiency: 0.98}
+    faults:
+      - {type: temperature, start_day: 60, ramp_days: 14, end_day: 160, shape: linear, max_severity: 1.0}
+  - device_id: WT009
+    device_params: {power_efficiency: 1.00}
+    faults:
+      - {type: yaw_misalignment, start_day: 90, ramp_days: 10, end_day: 230, shape: linear, max_severity: 18.0}
+  - device_id: WT010
+    device_params: {power_efficiency: 0.99}
+    faults:
+      - {type: temperature, start_day: 60, ramp_days: 14, shape: linear, max_severity: 1.0}
+      - {type: yaw_misalignment, start_day: 200, ramp_days: 10, shape: linear, max_severity: 18.0}
