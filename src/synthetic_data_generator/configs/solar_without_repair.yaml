@@ -1,0 +1,36 @@
+generator: solar
+seed: 42
+output_dir: generated_data/time_series/solar_data_without_repair
+stream_name: solar_farm_stream_data_without_repair
+events_name: solar_farm_fault_events_without_repair
+site: {start: '2025-01-01', n_days: 365, freq: 5min, latitude_deg: 35.0}
+devices:
+- device_id: PV000
+  device_params: {dc_capacity_scale: 1.0}
+  faults: []
+  outages: []
+- device_id: PV001
+  device_params: {dc_capacity_scale: 0.995}
+  faults:
+  - {type: soiling, start_day: 120, end_day: 280, ramp_days: 35, shape: linear, max_severity: 1.0}
+  outages: []
+- device_id: PV002
+  device_params: {dc_capacity_scale: 1.005, thermal_bias: 1.2}
+  faults:
+  - {type: inverter_overheat, start_day: 170, end_day: 255, temp_threshold: 34.0, irradiance_threshold: 780.0, trip_level: 0.7}
+  outages:
+  - {start_day: 210.0, duration_hours: 3.0, severity: 1.0}
+  - {start_day: 228.25, duration_hours: 2.5, severity: 1.0}
+- device_id: PV003
+  device_params: {tracker_gain: 0.99}
+  faults:
+  - {type: tracker_stuck, start_day: 85, end_day: 225, ramp_days: 2, shape: abrupt, max_severity: 1.0}
+  outages:
+  - {start_day: 226.0, duration_hours: 28.0, severity: 1.0}
+- device_id: PV004
+  device_params: {dc_capacity_scale: 0.99, voltage_bias: -8.0}
+  faults:
+  - {type: dc_string_outage, start_day: 295, ramp_days: 1, shape: abrupt, max_severity: 1.0}
+  outages:
+  - {start_day: 320.5, duration_hours: 5.0, severity: 1.0}
+  - {start_day: 333.0, duration_hours: 4.0, severity: 1.0}
