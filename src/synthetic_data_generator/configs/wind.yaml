@@ -1,3 +1,4 @@
+generator: wind
 seed: 42
 output_dir: generated_data/time_series/wind_data_with_repair
 stream_name: wind_turbine_stream_data_with_repair

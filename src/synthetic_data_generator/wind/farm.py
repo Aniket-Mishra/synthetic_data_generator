@@ -257,7 +257,12 @@ def build_fault_event_table(site_df, device_configs):
                 }
             )
 
-    return pd.DataFrame(rows)
+    events = pd.DataFrame(rows)
+    # The no-repair dataset was frozen before repair ramps existed. Keep its
+    # eight column schema when no fault ramps down.
+    if "ramp_down_days" in events and events["ramp_down_days"].isna().all():
+        events = events.drop(columns="ramp_down_days")
+    return events
 
 
 def simulate_farm(site_config, device_configs, seed):
@@ -272,3 +277,8 @@ def simulate_farm(site_config, device_configs, seed):
     data = data.sort_values(["time", "device"]).reset_index(drop=True)
     events = build_fault_event_table(site_df, device_configs)
     return data, events
+
+
+def run(cfg):
+    df, events = simulate_farm(cfg["site"], cfg["devices"], seed=cfg["seed"])
+    return {cfg["stream_name"]: df, cfg["events_name"]: events}
