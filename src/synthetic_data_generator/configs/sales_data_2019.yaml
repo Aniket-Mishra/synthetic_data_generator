@@ -1,0 +1,5 @@
+generator: sales
+seed: 42
+output_dir: generated_data/tabular/sales_data_2019
+data_name: sales_data_2019
+sales: {year: 2019, starting_order_number: 145345}
