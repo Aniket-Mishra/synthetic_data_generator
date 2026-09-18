@@ -1,0 +1,22 @@
+generator: pump
+seed: 42
+output_dir: generated_data/tabular/centrifugal_pump
+data_name: centrifugal_pump_operating_data_v1
+devices_name: centrifugal_pump_device_metadata_v1
+devices:
+- device_id: P001
+  n_samples: 2500
+  device_params: {efficiency_peak: 0.83}
+  fault_mix: {healthy: 0.7, cavitation: 0.1, impeller_wear: 0.1, bearing_friction: 0.1}
+- device_id: P002
+  n_samples: 2500
+  device_params: {q_bep_m3h: 88.0, h_bep_m: 46.0}
+  fault_mix: {healthy: 0.72, cavitation: 0.08, impeller_wear: 0.12, bearing_friction: 0.08}
+- device_id: P003
+  n_samples: 2500
+  device_params: {thermal_bias_c: 1.0}
+  fault_mix: {healthy: 0.68, cavitation: 0.12, impeller_wear: 0.08, bearing_friction: 0.12}
+- device_id: P004
+  n_samples: 2500
+  device_params: {motor_efficiency: 0.92}
+  fault_mix: {healthy: 0.75, cavitation: 0.07, impeller_wear: 0.08, bearing_friction: 0.1}
