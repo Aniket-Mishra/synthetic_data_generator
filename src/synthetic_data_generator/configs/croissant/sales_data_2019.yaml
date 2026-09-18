@@ -1,0 +1,18 @@
+name: ecommerce_sales_2019
+description: Synthetic US ecommerce orders for 2019. Demand varies by month, orders peak around noon and evening, and some products pull in accessory purchases.
+version: 1.0.0
+date_published: 2026-09-18
+cite_as: Aniket Mishra, Ecommerce Sales 2019 (synthetic), 2026.
+dataset_dir: generated_data/tabular/sales_data_2019
+
+record_sets:
+  order_lines:
+    file: sales_data_2019.parquet
+    description: One row per product line. Orders with accessories span several rows sharing an Order ID.
+    columns:
+      Order ID: Order number, shared by all lines of one order.
+      Product: Product name.
+      Quantity Ordered: Units ordered.
+      Price Each: Unit price in USD.
+      Order Date: Order time as text, MM/DD/YY HH:MM.
+      Purchase Address: Street, city, state and ZIP code.

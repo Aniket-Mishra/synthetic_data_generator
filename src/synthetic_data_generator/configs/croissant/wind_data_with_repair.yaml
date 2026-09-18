@@ -1,0 +1,55 @@
+name: wind_farm_fault_telemetry
+description: Physics-grounded synthetic wind farm telemetry with configurable fault injection and repair.
+version: 1.0.0
+date_published: 2026-07-14
+cite_as: Aniket Mishra, Wind Farm Fault Telemetry (synthetic), 2026.
+dataset_dir: generated_data/time_series/wind_data_with_repair
+
+record_sets:
+  measurements:
+    file: wind_turbine_stream_data_with_repair.parquet
+    description: One record per turbine per 10 minutes, with sensor readings and fault ground truth.
+    columns:
+      time: Reading timestamp.
+      device: Turbine id.
+      active_power: Active power output in kW.
+      wind_speed: Wind speed at the turbine in m/s.
+      air_density: Air density in kg/m^3.
+      wind_direction: Wind direction in degrees.
+      nacelle_direction: Nacelle heading in degrees.
+      nacelle_position: Nacelle position in degrees.
+      ambient_temp: Ambient temperature in Celsius.
+      rotor_speed: Rotor speed in rpm.
+      generator_speed: Generator speed in rpm.
+      gearbox_oil_temp: Gearbox oil temperature in Celsius.
+      generator_temp: Generator temperature in Celsius.
+      bearing_temp: Bearing temperature in Celsius.
+      converter_temp: Converter temperature in Celsius.
+      pitch_blade_angle_1: Pitch angle of blade 1 in degrees.
+      pitch_blade_angle_2: Pitch angle of blade 2 in degrees.
+      pitch_blade_angle_3: Pitch angle of blade 3 in degrees.
+      is_drifted: 1 if any fault active, else 0.
+      fault_labels:
+        description: Active fault(s), pipe separated, else healthy.
+        separator: "|"
+      fault_severity: none, low, medium, or high.
+      drift_start_time: First fault onset, else null.
+      fault_temperature: 1 if temperature fault active, else 0.
+      fault_pitch_misalignment: 1 if pitch misalignment fault active, else 0.
+      fault_yaw_misalignment: 1 if yaw misalignment fault active, else 0.
+
+  fault_events:
+    file: wind_turbine_fault_events_with_repair.parquet
+    description: One row per injected fault. device is a foreign key into measurements.
+    columns:
+      device:
+        description: Turbine the fault was injected on.
+        references: measurements/device
+      fault_type: Fault type.
+      start_time: Fault start.
+      end_time: Fault end, null if never repaired.
+      shape: "Onset shape: linear, abrupt, intermittent."
+      max_severity: Peak severity.
+      ramp_steps: Onset ramp in steps, if given.
+      ramp_days: Onset ramp in days, if given.
+      ramp_down_days: Recovery ramp in days, if given.

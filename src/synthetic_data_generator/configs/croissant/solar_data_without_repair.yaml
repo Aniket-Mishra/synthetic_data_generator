@@ -1,0 +1,52 @@
+name: solar_farm_fault_telemetry_without_repair
+description: Physics-grounded synthetic PV plant telemetry with configurable fault injection and maintenance outages, and no repair.
+version: 1.0.0
+date_published: 2026-09-18
+cite_as: Aniket Mishra, Solar Farm Fault Telemetry, No Repair (synthetic), 2026.
+dataset_dir: generated_data/time_series/solar_data_without_repair
+
+record_sets:
+  measurements:
+    file: solar_farm_stream_data_without_repair.parquet
+    description: One record per PV device per 5 minutes, with sensor readings and fault ground truth.
+    columns:
+      time: Reading timestamp.
+      device: PV device id.
+      active_power: AC active power output in kW.
+      irradiance: Effective irradiance on the modules in W/m^2.
+      clear_sky_irradiance: Modelled clear sky irradiance in W/m^2.
+      ambient_temp: Ambient temperature in Celsius.
+      module_temp: Module temperature in Celsius.
+      inverter_temp: Inverter temperature in Celsius.
+      dc_voltage: DC bus voltage in V.
+      dc_current: DC current in kA (active_power / dc_voltage).
+      ac_voltage: AC line voltage in V.
+      ac_current: AC current in kA (active_power / (sqrt(3) * ac_voltage)).
+      performance_ratio: Active power over clear sky expected power, 0 to about 1.
+      cloud_cover: Cloud cover fraction, 0 to 1.
+      sun_elevation: Sun elevation in degrees.
+      sun_azimuth: Sun azimuth in degrees.
+      day_length_hours: Hours between sunrise and sunset.
+      fault_soiling: 1 if soiling fault active, else 0.
+      fault_inverter_overheat: 1 if inverter overheat fault active, else 0.
+      fault_tracker_stuck: 1 if tracker stuck fault active, else 0.
+      fault_dc_string_outage: 1 if DC string outage fault active, else 0.
+      is_faulted: 1 if any fault or maintenance outage active, else 0.
+      fault_labels:
+        description: Active fault(s) and downtime, pipe separated, else healthy.
+        separator: "|"
+      downtime_start_time: First fault or outage onset, else null.
+      fault_severity: none, low, medium, or high.
+
+  fault_events:
+    file: solar_farm_fault_events_without_repair.parquet
+    description: One row per injected fault or maintenance outage. device is a foreign key into measurements.
+    columns:
+      device:
+        description: PV device the event applies to.
+        references: measurements/device
+      event_type: Fault type, or downtime for a maintenance outage.
+      start_time: Event start.
+      end_time: Event end, null if the event runs to the end of the year.
+      shape: "Onset shape: linear, abrupt, intermittent."
+      max_severity: Peak severity.

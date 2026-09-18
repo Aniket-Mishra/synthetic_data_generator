@@ -1,0 +1,59 @@
+name: centrifugal_pump_fault_snapshots
+description: Physics-grounded synthetic operating point snapshots for a 4-pump station, with cavitation, impeller wear, and bearing friction faults.
+version: 1.0.0
+date_published: 2026-09-18
+cite_as: Aniket Mishra, Centrifugal Pump Fault Snapshots (synthetic), 2026.
+dataset_dir: generated_data/tabular/centrifugal_pump
+
+record_sets:
+  operating_data:
+    file: centrifugal_pump_operating_data_v1.parquet
+    description: One row per operating point sample, with measurements and fault ground truth. device is a foreign key into devices.
+    columns:
+      sample_id: Row index, unique across all pumps.
+      device:
+        description: Pump id.
+        references: devices/device
+      active_fault: Active fault type, else healthy.
+      speed_rpm: Shaft speed in rpm.
+      flow_m3h: Flow rate in m^3/h.
+      differential_head_m: Differential head in m.
+      suction_abs_pressure_bar: Absolute suction pressure in bar.
+      discharge_pressure_bar: Discharge pressure in bar.
+      ambient_temp_c: Ambient temperature in Celsius.
+      fluid_temp_c: Fluid temperature in Celsius.
+      fluid_density_kgm3: Fluid density in kg/m^3.
+      efficiency: Pump efficiency, 0 to 1.
+      hydraulic_power_kw: Hydraulic power in kW.
+      shaft_power_kw: Shaft power in kW.
+      motor_power_kw: Motor electrical power in kW.
+      motor_current_a: Motor current in A.
+      vibration_mm_s: Vibration velocity in mm/s.
+      bearing_temp_c: Bearing temperature in Celsius.
+      npsha_m: Net positive suction head available in m.
+      npshr_m: Net positive suction head required in m.
+      cavitation_margin_m: npsha_m minus npshr_m, in m.
+      fault_cavitation: 1 if cavitation fault active, else 0.
+      fault_impeller_wear: 1 if impeller wear fault active, else 0.
+      fault_bearing_friction: 1 if bearing friction fault active, else 0.
+      is_faulted: 1 if any fault active, else 0.
+      fault_labels: Same as active_fault. Each sample carries at most one fault.
+      fault_severity: none, low, medium, or high.
+
+  devices:
+    file: centrifugal_pump_device_metadata_v1.parquet
+    description: One row per pump with the physical parameters its samples were simulated from.
+    columns:
+      device: Pump id.
+      nominal_speed_rpm: Nominal shaft speed in rpm.
+      q_bep_m3h: Flow at best efficiency point in m^3/h.
+      h_bep_m: Head at best efficiency point in m.
+      h0_m: Shut-off head in m.
+      efficiency_peak: Peak efficiency, 0 to 1.
+      npshr_bep_m: Net positive suction head required at best efficiency point in m.
+      motor_efficiency: Motor efficiency, 0 to 1.
+      motor_power_factor: Motor power factor, 0 to 1.
+      line_voltage_v: Supply line voltage in V.
+      sensor_noise_scale: Multiplier on sensor noise, 1.0 is nominal.
+      thermal_bias_c: Bearing temperature offset in Celsius.
+      pump_curve_k: Quadratic pump curve coefficient in m per (m^3/s)^2.

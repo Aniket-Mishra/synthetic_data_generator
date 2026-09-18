@@ -1,0 +1,44 @@
+name: imbalanced_fraud_detection
+description: Synthetic Dutch retail bank transactions with repeated customers, subscriptions, and 1% labelled fraud from card testing, high value extrication, and velocity attacks.
+version: 1.0.0
+date_published: 2026-09-18
+cite_as: Aniket Mishra, Imbalanced Fraud Detection (synthetic), 2026.
+dataset_dir: generated_data/tabular/imbalanced_fraud
+
+record_sets:
+  transactions:
+    file: imbalanced_fraud_detection.parquet
+    description: One row per transaction, shuffled, with fraud ground truth. customer_id is a foreign key into customers.
+    columns:
+      transaction_id: Deterministic UUID5 of the row.
+      timestamp: Transaction time.
+      customer_id:
+        description: Customer id. new_account_fraud customers have no row in customers.
+        references: customers/customer_id
+      account_age_days: Days between the customer signup date and the transaction.
+      home_country: Customer home country, ISO 3166-1 alpha-2.
+      merchant_id: Merchant id, built from country, category, and a number.
+      merchant_country: Merchant country, ISO 3166-1 alpha-2.
+      merchant_category: Merchant category, for example Groceries or Travel.
+      device_type: Device used, for example android or desktop.
+      transaction_channel: pos_pin, ideal_online, credit_card_online, or atm_cash.
+      amount: Transaction amount in EUR.
+      distance_from_home: Distance from the customer home in km.
+      is_cross_border: True if merchant_country differs from home_country.
+      is_subscription: True for recurring subscription charges.
+      subscription_name: Subscription product, else none.
+      is_fraud: 1 if fraud, else 0.
+      fraud_source: none, account_takeover, stolen_card, or new_account_fraud.
+      fraud_scenario: none, ping, high_value_extrication, or velocity_attack.
+
+  customers:
+    file: fraud_customer_profiles.parquet
+    description: One row per customer with the latent behaviour parameters their transactions were sampled from.
+    columns:
+      customer_id: Customer id.
+      signup_date: Account signup date.
+      home_country: Customer home country, ISO 3166-1 alpha-2.
+      primary_device_type: Most used device type.
+      normal_spend_level: Multiplier on typical purchase amounts, 1.0 is median.
+      normal_travel_radius: Typical distance from home in km.
+      activity_level: Relative transaction frequency weight.
