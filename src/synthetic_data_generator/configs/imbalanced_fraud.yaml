@@ -1,0 +1,6 @@
+generator: fraud
+seed: 42
+output_dir: generated_data/tabular/imbalanced_fraud
+transactions_name: imbalanced_fraud_detection
+customers_name: fraud_customer_profiles
+dataset: {start: '2025-01-01', n_days: 365, n_customers: 5000, n_everyday_transactions: 100000, target_fraud_rate: 0.01}
