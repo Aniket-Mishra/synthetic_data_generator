@@ -1,0 +1,65 @@
+name: dutch_smart_meter_portfolio
+description: Synthetic Dutch residential smart meter portfolio for 2025, with weather, day-ahead prices, household attributes, hidden load components, and labelled events.
+version: 1.0.0
+date_published: 2026-09-18
+cite_as: Aniket Mishra, Dutch Smart Meter Portfolio (synthetic), 2026.
+dataset_dir: generated_data/time_series/smart_meter
+
+record_sets:
+  households:
+    file: smart_meter_households.parquet
+    description: One row per household. Attributes are the end-of-year state. Mid-year changes are in events.
+    columns:
+      household_id: Household id.
+      dwelling_type: apartment, terraced, corner, semi_detached, or detached.
+      floor_area_m2: Floor area in m^2.
+      energy_label: Dutch energy label, A to G.
+      occupants: Number of occupants, 1 to 5.
+      heating: gas_boiler, hybrid_heat_pump, heat_pump, or district_heating.
+      pv_kwp: Solar panel capacity in kWp, 0 without panels.
+      ev_charger_kw: Home charger power in kW, 0 without an EV.
+      contract: single, dual (cheaper at night and weekends), or dynamic (follows the day-ahead price).
+
+  context:
+    file: smart_meter_context.parquet
+    description: One row per 15 minutes. Temperature and irradiance are at De Bilt. Wind is a production-weighted national series for the price model. Times are Europe/Amsterdam, with DST.
+    columns:
+      time: Start of the interval.
+      temperature_c: Outdoor temperature at De Bilt in Celsius.
+      irradiance_w_m2: Global horizontal irradiance at De Bilt in W/m^2.
+      wind_speed_m_s: Production-weighted Dutch wind speed in m/s, used in the price model.
+      day_ahead_price_eur_mwh: Day-ahead price in EUR/MWh, hourly until 1 October 2025 and per 15 minutes after.
+      is_holiday: True on weekday Dutch public holidays.
+
+  readings:
+    file: smart_meter_readings.parquet
+    description: One row per household per 15 minutes. import_kwh and export_kwh are the P4 meter. gas_m3 and heat_gj are hourly. base_kwh, heating_kwh, ev_kwh, and pv_kwh are hidden ground truth. household_id joins households, time joins context.
+    columns:
+      time:
+        description: Start of the interval.
+        references: context/time
+      household_id:
+        description: Household id.
+        references: households/household_id
+      import_kwh: Grid import in kWh, null during a meter outage.
+      export_kwh: Grid export in kWh, null during a meter outage.
+      gas_m3: Hourly gas in m^3, on whole hours. Null without a gas connection, off the hour, or during a meter outage.
+      heat_gj: Hourly district heat in GJ, on whole hours. Null without district heating, off the hour, or during a meter outage.
+      base_kwh: Appliances and lighting in kWh.
+      heating_kwh: Heat pump electricity in kWh.
+      ev_kwh: EV charging in kWh.
+      pv_kwh: Solar generation in kWh.
+      event_labels:
+        description: Active event(s), pipe separated, else none.
+        separator: "|"
+
+  events:
+    file: smart_meter_events.parquet
+    description: One row per event. Windows have an end_time. Permanent changes have a null end_time.
+    columns:
+      household_id:
+        description: Household the event applies to.
+        references: households/household_id
+      event_type: vacation, pv_inverter_outage, meter_outage, ev_acquired, heat_pump_installed, or switched_to_dynamic.
+      start_time: Event start.
+      end_time: Event end, null for a permanent change.

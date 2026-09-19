@@ -3,7 +3,7 @@ from pathlib import Path
 
 import yaml
 
-from synthetic_data_generator import fraud, pump, sales, solar
+from synthetic_data_generator import fraud, pump, sales, smart_meter, solar
 from synthetic_data_generator.wind import farm as wind
 
 GENERATORS = {
@@ -12,6 +12,7 @@ GENERATORS = {
     "pump": pump.run,
     "fraud": fraud.run,
     "sales": sales.run,
+    "smart_meter": smart_meter.run,
 }
 
 

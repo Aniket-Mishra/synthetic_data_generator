@@ -1,0 +1,35 @@
+generator: smart_meter
+seed: 7
+output_dir: generated_data/time_series/smart_meter
+
+site:
+  start: "2025-01-01"
+  n_days: 365
+  freq: "15min"
+
+n_households: 100
+
+holidays:
+  - "2025-01-01"
+  - "2025-04-21"
+  - "2025-05-05"
+  - "2025-05-29"
+  - "2025-06-09"
+  - "2025-12-25"
+  - "2025-12-26"
+
+population:
+  dwelling_type: {apartment: 0.30, terraced: 0.38, corner: 0.12, semi_detached: 0.12, detached: 0.08}
+  energy_label: {A: 0.25, B: 0.15, C: 0.25, D: 0.13, E: 0.09, F: 0.07, G: 0.06}
+  heating: {gas_boiler: 0.62, hybrid_heat_pump: 0.12, heat_pump: 0.14, district_heating: 0.12}
+  pv_share_by_dwelling: {apartment: 0.05, terraced: 0.40, corner: 0.45, semi_detached: 0.50, detached: 0.55}
+  ev_share: 0.18
+  dynamic_contract_share: {ev: 0.23, no_ev: 0.04}
+
+events:
+  vacation_per_year: 1.2
+  pv_inverter_outage_per_year: 0.3
+  meter_outage_per_year: 2.0
+  ev_acquired_share: 0.3
+  heat_pump_installed_share: 0.3
+  switched_to_dynamic_share: 0.3
